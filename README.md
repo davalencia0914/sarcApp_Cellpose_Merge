@@ -17,6 +17,6 @@ Python-based code that makes Cellpose segmentations (https://github.com/MouseLan
 13. On the second GUI that pops up after starting sarcApp, you need to enter the data folder as the filepath that you saved the CSV files to from the imageJ measurements off the binarized images (step 6). The “Output Folder” is the same folder you had saved all the pickle objects in that contain the coordinates of the ROIs/cells from the image.
 14. To help with data management after sarcApp runs, I wrote short Python scripts that can be run on ipython terminals to merge each set of the 3 possible CSV files based on an input prefix filename titled, “CSV_Merge.py” (for cellResults,  msfResults, and mfResults).
 15. "DAV_postSarcApp_CSV_Cleanup.txt" can be put into ipython on the terminal with the correct filepath to the CSV file that you want to delete the excess headers from that carry over from the CSV_Merge.py script.
-Notes: The same regions of actininMain and actininFixed2D.py would need to be amended if using myomesin or titin for measurements by sarcApp. 
+Notes: The same regions of actininMain and actininFixed2D.py would need to be amended if using myomesin or titin for measurements by sarcApp. Also, the CellposeEdge_ACNC.py file needs to be in the folder of all the other sarcApp scripts for everything to run smoothly.
 
 
