@@ -1,4 +1,4 @@
-![image](https://github.com/davalencia0914/sarcApp_Cellpose_Merge/assets/94202414/1fcf1334-61dd-4833-8271-aefda37dd8c0)# sarcApp_Cellpose_Merge
+# sarcApp_Cellpose_Merge
 Python-based code that makes Cellpose segmentations (https://github.com/MouseLand/cellpose) compatible with sarcApp (by abbieneininger). (Link to sarcApp repository: https://github.com/abbieneininger/sarcApp)
 
 # Protocol
