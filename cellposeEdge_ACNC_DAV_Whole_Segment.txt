@@ -1,0 +1,80 @@
+import sys
+import numpy as np
+import os
+from alpha_shapes.alpha_shapes import Alpha_Shaper
+import pickle
+from scipy import ndimage
+import glob
+from matplotlib import pyplot as plt
+    
+outputFolder = "/Users/filepath_here"
+count = 1
+#1 count to align with ROI numbers of cell outlines on imageJ through the imageJ macros
+array_filepath = glob.glob(os.path.join("filepath_to_folder_of_NPY_files_from_Cellpose", '*.npy'))
+array_dict = {f1: np.load(f1, allow_pickle=True, fix_imports=True) for f1 in array_filepath}
+
+# Move Alpha_Shaper object definition outside the function
+shaper = None
+    
+def cellposeEdge(npy_file, outputFolder, count, xres):
+    mask = np.load(npy_file, allow_pickle=True, fix_imports=True, encoding='bytes').item()
+    binary_mask = mask['outlines']
+    cell_idxs = np.unique(binary_mask)
+    for idx in cell_idxs:
+        if idx == 0:
+            continue
+        outline_coords = np.where(binary_mask == idx)
+        # this returns the coords of the outline pixels, check the numpy docs for more info
+        print(idx)
+        coords = np.flip(outline_coords, axis=0)
+        x = coords[0] / xres
+        y = coords[1] / xres
+        #scaled coordinates above to spatial resolution of microscope; exclude small cells below (optional due to manually deleting cellpose artifacts)
+        #if len(x) < 280 or len(y) < 280:
+            #count += 1
+            #continue
+        points = np.stack((x, y), axis=1)
+        alpha = 6.0
+        while alpha > 0:
+            shaper = Alpha_Shaper(points)
+            alpha_shape = shaper.get_shape(alpha=alpha)
+            try:
+                edgeX, edgeY = alpha_shape.exterior.coords.xy
+            except AttributeError:
+                alpha -= 1
+            else:
+                break
+            
+        edgeX = np.array(edgeX)
+        edgeY = np.array(edgeY)
+        #cx = sum(edgeX) / len(edgeX)
+      #cy = sum(edgeY) / len(edgeY)
+         #edgeX = (scale * (edgeX - cx)) + cx
+         #edgeY = (scale * (edgeY - cy)) + cy
+                # Construct output file path
+        output_filename = f"edgeShape_{os.path.splitext(filename)[0]}_{count}.pickle".format(count)
+        outputFilePath = os.path.join(outputFolder, output_filename)
+        print("Output File Path:", outputFilePath)
+        count += 1
+        os.makedirs(outputFolder, exist_ok=True)
+            
+        try:
+            with open(outputFilePath, "wb") as f:
+                pickle.dump(alpha_shape, f)
+        except Exception as e:
+            print("Error occurred while saving pickle file:", str(e))
+    return edgeX, edgeY, alpha_shape
+for npy_file in array_dict:
+    try:
+        # Extract the filename from the file path
+        filename = os.path.basename(npy_file)
+        cellposeEdge(npy_file, outputFolder, count, xres=6.2016)
+    except RuntimeError as e:
+        print("Error occurred while processing", npy_file)
+        try:
+            print(traceback.format_exc())  # Print the traceback for detailed error information
+        except NameError:
+            print("An error occurred while printing the traceback. Please enable verbose mode to see the original qhull error.")
+        continue
+print("Pickle files saved in the designated output folder:", outputFolder)
+
