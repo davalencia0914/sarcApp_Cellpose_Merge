@@ -1,0 +1,23 @@
+input = "/Users/dylanvalencia/Desktop/GSFH1_CZI/";
+output = "/Users/dylanvalencia/Desktop/GSFH1_CZI/Merge_DAPI_WGA/";
+WGATMR = "C4-"
+//DAPI = "C2-"
+//Channel numbers above may vary between acquisitions, but c1 always red, c2 always green, c3 always blue
+File.makeDirectory(output);
+list = getFileList(input);
+for (i=0; i < list.length; i++) {
+if (matches(list[i], ".*\\.czi")=="1") {
+	print(list[i]);
+	processFile(input, output, list[i]);}}
+
+function processFile(input, output, file) {
+// Do the processing here by adding your own code.
+// Leave the print statements until things work, then remove them.
+
+run("Bio-Formats", "open=[" + input + file + "]");
+run("Split Channels");
+run("Merge Channels...", "c1=" + WGATMR + file + " create");
+name = split(file, ".");
+prefix = name[0];
+saveAs(output+ prefix + ".jpg"); 
+close("*");}
