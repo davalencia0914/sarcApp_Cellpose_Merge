@@ -1,6 +1,9 @@
 # sarcApp_Cellpose_Merge
 Python-based code that makes Cellpose segmentations (https://github.com/MouseLand/cellpose) compatible with sarcApp (by abbieneininger). (Link to sarcApp repository: https://github.com/abbieneininger/sarcApp)
 
+Reference to eLife publication where this code was used for modified segmentation on Cellpose with imageJ macros: Valencia DA, Koeberlein AN, Nakano H, Rudas A, Patel AA, Harui A, Spencer C, Nakano A, Quinlan ME. (2024) Human formin FHOD3-mediated actin elongation is required for sarcomere integrity in cardiomyocytes. eLife 13:RP104048
+https://doi.org/10.7554/eLife.104048.2
+
 # Protocol
 1. First download and install both Cellpose and sarcApp from the respective links above
 2. Segment cells normally as described by Cellpose.
